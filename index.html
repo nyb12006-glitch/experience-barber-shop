@@ -684,15 +684,20 @@
     .footer-copy { font-size: 0.67rem; color: rgba(240,237,232,0.28); }
 
     /* ─── REVEAL ───────────────────────────── */
-    .rv {
-      opacity: 0; transform: translateY(28px);
-      transition: opacity 0.75s var(--ease), transform 0.75s var(--ease);
+    .rv, .ig-card, .about-text, .svc {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
     }
-    .rv.on { opacity: 1; transform: translateY(0); }
+    .rv.on, .ig-card.on, .about-text.on, .svc.on { opacity: 1; transform: translateY(0); }
     .rv.d1 { transition-delay: 0.1s; }
     .rv.d2 { transition-delay: 0.2s; }
     .rv.d3 { transition-delay: 0.3s; }
     .rv.d4 { transition-delay: 0.4s; }
+    .svc:nth-child(2) { transition-delay: 0.1s; }
+    .svc:nth-child(3) { transition-delay: 0.2s; }
+    .svc:nth-child(4) { transition-delay: 0.05s; }
+    .svc:nth-child(5) { transition-delay: 0.15s; }
+    .svc:nth-child(6) { transition-delay: 0.25s; }
 
     /* ─── RESPONSIVE ───────────────────────── */
     @media (max-width: 1024px) {
@@ -1153,65 +1158,37 @@
   </p>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
 /* ── Nav scroll + active links ── */
-const nav  = document.getElementById('mainNav');
+const nav   = document.getElementById('mainNav');
 const links = document.querySelectorAll('.nav-links a');
 
 window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', scrollY > 60);
-
   let active = '';
-  document.querySelectorAll('section[id], section.hero[id]').forEach(s => {
+  document.querySelectorAll('section[id]').forEach(s => {
     if (scrollY >= s.offsetTop - 120) active = s.id;
   });
   links.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + active));
 }, { passive: true });
 
-/* ── GSAP + ScrollTrigger ── */
-gsap.registerPlugin(ScrollTrigger);
+/* ── Video autoplay ── */
+document.getElementById('bgVideo').play().catch(() => {});
 
-/* Video de fondo: autoplay normal */
-const bgVideo = document.getElementById('bgVideo');
-bgVideo.play().catch(() => {});
+/* ── Reveal on scroll (IntersectionObserver) ── */
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); revealObs.unobserve(e.target); } });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.rv, .ig-card, .about-text, .svc').forEach(el => revealObs.observe(el));
 
-/* Hero split exit — texto se abre al scrollear */
-const vw = window.innerWidth;
-const isMobile = vw < 768;
-const splitDist = isMobile ? vw * 0.55 : vw;
-
-const heroExitTl = gsap.timeline({
-  scrollTrigger: {
-    trigger: '.hero',
-    start: 'top top',
-    end: '+=240',
-    pin: !isMobile,
-    scrub: 1.8,
-    anticipatePin: 1
-  }
-});
-
-heroExitTl
-  // Van a la IZQUIERDA
-  .to(['.hero-eyebrow', '.hero-loc', '.btn-gold', '.hero-byline'],  { x: -splitDist, opacity: 0 }, 0)
-  .to('.hero-title-l',                              { x: -splitDist },             0)
-  // Van a la DERECHA
-  .to('.hero-title-r',                              { x:  splitDist },             0)
-  .to(['.hero-sub', '.btn-ghost', '.hero-pole'],    { x:  splitDist, opacity: 0 }, 0)
-  // Desvanecen
-  .to(['.hero-rule', '.hero-scroll-indicator'],     { opacity: 0 },         0);
-
-/* Carrusel galería */
+/* ── Carrusel galería ── */
 (function () {
-  const track      = document.getElementById('carTrack');
-  const slides     = track.querySelectorAll('.car-slide');
-  const dotsWrap   = document.getElementById('carDots');
-  const currentEl  = document.getElementById('carCurrent');
-  const total      = slides.length;
-  let current      = 0;
-  let autoTimer;
+  const track     = document.getElementById('carTrack');
+  const slides    = track.querySelectorAll('.car-slide');
+  const dotsWrap  = document.getElementById('carDots');
+  const currentEl = document.getElementById('carCurrent');
+  const total     = slides.length;
+  let current = 0, autoTimer;
 
   slides.forEach((_, i) => {
     const d = document.createElement('button');
@@ -1230,7 +1207,6 @@ heroExitTl
 
   document.getElementById('carPrev').addEventListener('click', () => { goTo(current - 1); resetAuto(); });
   document.getElementById('carNext').addEventListener('click', () => { goTo(current + 1); resetAuto(); });
-
   document.addEventListener('keydown', e => {
     if (e.key === 'ArrowLeft')  { goTo(current - 1); resetAuto(); }
     if (e.key === 'ArrowRight') { goTo(current + 1); resetAuto(); }
@@ -1238,7 +1214,7 @@ heroExitTl
 
   let startX = 0;
   track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
-  track.addEventListener('touchend',   e => {
+  track.addEventListener('touchend', e => {
     const diff = startX - e.changedTouches[0].clientX;
     if (Math.abs(diff) > 45) { goTo(current + (diff > 0 ? 1 : -1)); resetAuto(); }
   }, { passive: true });
@@ -1250,29 +1226,9 @@ heroExitTl
   track.closest('.carousel-wrap').addEventListener('mouseleave', startAuto);
 })();
 
-/* Nosotros: ig-card aparece (fade in + scale), texto entra desde la derecha */
-gsap.from('.ig-card', {
-  opacity: 0, scale: 0.92, y: 40, duration: 0.7, ease: 'power2.out',
-  scrollTrigger: { trigger: '.ig-card', start: 'top 88%', toggleActions: 'play none none none' }
-});
-
-gsap.from('.about-text', {
-  x: 50, opacity: 0, duration: 0.7, ease: 'power2.out',
-  scrollTrigger: { trigger: '.about-text', start: 'top 88%', toggleActions: 'play none none none' }
-});
-
-/* Services: reveal simple sin scrub */
-gsap.utils.toArray('.svc').forEach((card, i) => {
-  gsap.from(card, {
-    y: 30, opacity: 0, duration: 0.6, delay: (i % 3) * 0.1,
-    scrollTrigger: { trigger: card, start: 'top 90%', toggleActions: 'play none none none' }
-  });
-});
-
 /* ── Burger menu ── */
 const burgerBtn = document.getElementById('burgerBtn');
 const mobileNav = document.getElementById('mobileNav');
-
 burgerBtn.addEventListener('click', () => {
   const open = mobileNav.classList.toggle('open');
   burgerBtn.classList.toggle('open', open);
@@ -1286,30 +1242,19 @@ mobileNav.querySelectorAll('a').forEach(a => {
   });
 });
 
-/* ── Scroll reveal ── */
-const rvEls = document.querySelectorAll('.rv');
-const rvObs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
-}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-rvEls.forEach(el => rvObs.observe(el));
-
 /* ── Counter animation ── */
 function runCounter(el, target, ms = 1400) {
   const start = performance.now();
-  const tick  = now => {
+  const tick = now => {
     const p = Math.min((now - start) / ms, 1);
-    const v = Math.round((1 - Math.pow(1 - p, 3)) * target);
-    el.querySelector('.n').textContent = v;
+    el.querySelector('.n').textContent = Math.round((1 - Math.pow(1 - p, 3)) * target);
     if (p < 1) requestAnimationFrame(tick);
   };
   requestAnimationFrame(tick);
 }
-
 const statsObs = new IntersectionObserver(entries => {
   if (entries[0].isIntersecting) {
-    document.querySelectorAll('[data-count]').forEach(el => {
-      runCounter(el, +el.dataset.count);
-    });
+    document.querySelectorAll('[data-count]').forEach(el => runCounter(el, +el.dataset.count));
     statsObs.disconnect();
   }
 }, { threshold: 0.35 });
