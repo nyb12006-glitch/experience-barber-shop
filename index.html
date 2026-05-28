@@ -34,6 +34,7 @@
       scroll-behavior: smooth;
       scrollbar-width: thin;
       scrollbar-color: var(--gold) var(--dark);
+      overflow-x: hidden;
     }
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: var(--dark); }
@@ -738,6 +739,23 @@
       .stats-row { grid-template-columns: repeat(2,1fr); }
       .gallery-grid { grid-auto-rows: 150px; }
       footer { padding: 2.5rem 1.5rem; }
+
+      /* Cambio 2: hero title sin desbordamiento en 375px */
+      .hero-title { font-size: 11vw; letter-spacing: 0.06em; }
+      .hero-eyebrow { gap: 0.6rem; letter-spacing: 0.25em; }
+      .hero-eyebrow::before, .hero-eyebrow::after { width: 16px; }
+
+      /* Cambio 3b: secciones responsive móvil */
+      .about-wrap { padding-top: 4rem; padding-bottom: 4rem; gap: 2rem; }
+      .contact-wrap { padding-top: 4rem; padding-bottom: 4rem; gap: 2rem; }
+      .services-section { padding-top: 4rem; padding-bottom: 4rem; }
+      .gallery-section { padding-top: 4rem; padding-bottom: 4rem; }
+      .stats-band { padding-top: 3.5rem; padding-bottom: 3.5rem; }
+      .car-slide { height: 60vh; }
+      .footer-logo { font-size: 1.35rem; letter-spacing: 0.25em; }
+      .ig-card { padding: 1.2rem; }
+      .svc { padding: 1.8rem 1.4rem; }
+      .btn-gold, .btn-ghost { width: 100%; text-align: center; }
     }
   </style>
 </head>
@@ -1195,7 +1213,7 @@ function initVideoScrub() {
   ScrollTrigger.create({
     start: 0,
     end: 'max',
-    scrub: 0.8,
+    scrub: 0.3,
     onUpdate: self => {
       if (bgVideo.readyState > 1) {
         bgVideo.currentTime = bgVideo.duration * self.progress;
@@ -1212,26 +1230,25 @@ if (bgVideo.readyState > 0) {
 
 /* Hero split exit — texto se abre al scrollear */
 const vw = window.innerWidth;
+const isMobile = window.innerWidth <= 768;
+
 const heroExitTl = gsap.timeline({
   scrollTrigger: {
     trigger: '.hero',
     start: 'top top',
-    end: '+=240',
+    end: isMobile ? '+=160' : '+=240',
     pin: true,
-    scrub: 1.8,
+    scrub: isMobile ? 1 : 1.8,
     anticipatePin: 1
   }
 });
 
 heroExitTl
-  // Van a la IZQUIERDA
-  .to(['.hero-eyebrow', '.hero-loc', '.btn-gold', '.hero-byline'],  { x: -vw, opacity: 0 }, 0)
-  .to('.hero-title-l',                              { x: -vw },             0)
-  // Van a la DERECHA
-  .to('.hero-title-r',                              { x:  vw },             0)
-  .to(['.hero-sub', '.btn-ghost', '.hero-pole'],    { x:  vw, opacity: 0 }, 0)
-  // Desvanecen
-  .to(['.hero-rule', '.hero-scroll-indicator'],     { opacity: 0 },         0);
+  .to(['.hero-eyebrow', '.hero-loc', '.btn-gold', '.hero-byline'], { x: -vw, opacity: 0 }, 0)
+  .to('.hero-title-l',                             { x: -vw },             0)
+  .to('.hero-title-r',                             { x:  vw },             0)
+  .to(['.hero-sub', '.btn-ghost', '.hero-pole'],   { x:  vw, opacity: 0 }, 0)
+  .to(['.hero-rule', '.hero-scroll-indicator'],    { opacity: 0 },         0);
 
 /* Carrusel galería */
 (function () {
@@ -1295,7 +1312,8 @@ gsap.from('.ig-card', {
 });
 
 gsap.from('.about-text', {
-  x: vw,
+  x: window.innerWidth > 1024 ? vw : 0,
+  y: window.innerWidth > 1024 ? 0 : 60,
   opacity: 0,
   ease: 'none',
   scrollTrigger: {
@@ -1308,10 +1326,16 @@ gsap.from('.about-text', {
 
 /* Services: cada tarjeta entra desde su posición, scrubbed como el hero */
 gsap.utils.toArray('.svc').forEach((card, i) => {
-  const col  = i % 3;
-  const from = col === 0 ? { x: -160, y: 0 }
-             : col === 2 ? { x:  160, y: 0 }
-             :              { x:    0, y: 130 };
+  const cols = window.innerWidth > 1024 ? 3 : window.innerWidth > 768 ? 2 : 1;
+  let from;
+  if (cols === 1) {
+    from = { x: 0, y: 80 };
+  } else if (cols === 2) {
+    from = i % 2 === 0 ? { x: -120, y: 0 } : { x: 120, y: 0 };
+  } else {
+    const col = i % 3;
+    from = col === 0 ? { x: -160, y: 0 } : col === 2 ? { x: 160, y: 0 } : { x: 0, y: 130 };
+  }
 
   gsap.from(card, {
     ...from,
