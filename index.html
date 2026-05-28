@@ -1214,8 +1214,21 @@ const bgVideo = document.getElementById('bgVideo');
 
 function startVideoScrub() {
   bgVideo.pause();
-  let rafId   = null;
-  let targetT = 0;
+  const mobile = window.innerWidth <= 768;
+  const lerp   = mobile ? 0.10 : 0.15;
+  let targetT  = 0;
+  let smoothT  = 0;
+
+  (function tick() {
+    if (bgVideo.readyState >= 2) {
+      const diff = targetT - smoothT;
+      if (Math.abs(diff) > 0.001) {
+        smoothT += diff * lerp;
+        bgVideo.currentTime = smoothT;
+      }
+    }
+    requestAnimationFrame(tick);
+  })();
 
   ScrollTrigger.create({
     start: 0,
@@ -1223,22 +1236,14 @@ function startVideoScrub() {
     onUpdate: self => {
       if (bgVideo.readyState < 2) return;
       targetT = bgVideo.duration * self.progress;
-      if (!rafId) {
-        rafId = requestAnimationFrame(() => {
-          if (Math.abs(bgVideo.currentTime - targetT) > 0.1) {
-            bgVideo.currentTime = targetT;
-          }
-          rafId = null;
-        });
-      }
     }
   });
 }
 
 function initVideoScrub() {
-  if (window.innerWidth <= 768) {
-    bgVideo.loop = true;
-    bgVideo.play().catch(() => {});
+  if (window.innerWidth <= 768 && bgVideo.readyState < 4) {
+    bgVideo.addEventListener('canplaythrough', startVideoScrub, { once: true });
+    bgVideo.load();
   } else {
     startVideoScrub();
   }
