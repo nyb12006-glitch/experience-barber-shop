@@ -34,7 +34,6 @@
       scroll-behavior: smooth;
       scrollbar-width: thin;
       scrollbar-color: var(--gold) var(--dark);
-      overflow-x: hidden;
     }
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: var(--dark); }
@@ -57,6 +56,9 @@
       object-fit: cover;
       z-index: -2;
       pointer-events: none;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      will-change: transform;
     }
     .video-overlay {
       position: fixed;
@@ -1207,16 +1209,33 @@ gsap.registerPlugin(ScrollTrigger);
 
 /* Vídeo scrubbing: frames avanzan con el scroll */
 const bgVideo = document.getElementById('bgVideo');
-bgVideo.pause();
 
 function initVideoScrub() {
+  if (window.innerWidth <= 768) {
+    /* Móvil: autoplay continuo — sin scrub para que sea fluido y se vea siempre */
+    bgVideo.loop  = true;
+    bgVideo.muted = true;
+    bgVideo.play().catch(() => {});
+    return;
+  }
+
+  /* Desktop: scrub controlado por scroll con rAF throttle para no forzar
+     un decode de frame en cada evento de scroll */
+  bgVideo.pause();
+  let rafId     = null;
+  let targetT   = 0;
+
   ScrollTrigger.create({
     start: 0,
     end: 'max',
-    scrub: 0.3,
     onUpdate: self => {
-      if (bgVideo.readyState > 1) {
-        bgVideo.currentTime = bgVideo.duration * self.progress;
+      if (bgVideo.readyState < 2) return;
+      targetT = bgVideo.duration * self.progress;
+      if (!rafId) {
+        rafId = requestAnimationFrame(() => {
+          bgVideo.currentTime = targetT;
+          rafId = null;
+        });
       }
     }
   });
