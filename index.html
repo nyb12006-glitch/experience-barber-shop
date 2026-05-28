@@ -82,10 +82,10 @@
       border-bottom: 1px solid transparent;
     }
     .nav.scrolled {
-      background: rgba(7,7,7,0.92);
+      background: rgba(7,7,7,0.95);
       border-bottom-color: var(--border);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
     }
     .nav-logo {
       font-family: var(--serif);
@@ -162,7 +162,6 @@
     .hero-bg {
       position: absolute; inset: -12%;
       background: url('assets/instagram/real_7_497570333_1722576132029960_463.jpg') center/cover no-repeat;
-      will-change: transform;
       filter: grayscale(20%) brightness(0.28);
     }
     .hero-vignette {
@@ -233,7 +232,6 @@
       font-size: clamp(4.5rem, 13vw, 11rem);
       font-weight: 300; letter-spacing: 0.18em;
       line-height: 0.9; color: var(--white);
-      will-change: transform;
     }
     .hero-title-wrap { position: relative; }
     .hero-title-l { clip-path: inset(0 50% 0 0); }
@@ -246,7 +244,6 @@
       font-size: clamp(1rem, 2.4vw, 1.8rem);
       font-weight: 300; font-style: italic;
       letter-spacing: 0.32em; color: var(--gold-lt);
-      will-change: transform;
     }
 
     /* ─── MARQUEE BAND ─────────────────────── */
@@ -543,7 +540,7 @@
     .carousel-wrap { max-width: 1400px; margin: 0 auto; position: relative; }
     .carousel-viewport { overflow: hidden; }
     .carousel-track {
-      display: flex; will-change: transform;
+      display: flex;
       transition: transform 0.75s cubic-bezier(0.25,0.46,0.45,0.94);
     }
     .car-slide {
@@ -1223,7 +1220,9 @@ function startVideoScrub() {
       targetT = bgVideo.duration * self.progress;
       if (!rafId) {
         rafId = requestAnimationFrame(() => {
-          bgVideo.currentTime = targetT;
+          if (Math.abs(bgVideo.currentTime - targetT) > 0.04) {
+            bgVideo.currentTime = targetT;
+          }
           rafId = null;
         });
       }
@@ -1370,24 +1369,6 @@ gsap.utils.toArray('.svc').forEach((card, i) => {
   });
 });
 
-/* IG grid mini-parallax (card de about) */
-gsap.utils.toArray('.ig-grid-cell').forEach(cell => {
-  const img = cell.querySelector('img');
-  gsap.fromTo(img,
-    { yPercent: -8, scale: 1.08 },
-    {
-      yPercent: 8,
-      scale: 1.08,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: cell,
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: true
-      }
-    }
-  );
-});
 
 /* ── Burger menu ── */
 const burgerBtn = document.getElementById('burgerBtn');
@@ -1434,6 +1415,16 @@ const statsObs = new IntersectionObserver(entries => {
   }
 }, { threshold: 0.35 });
 statsObs.observe(document.getElementById('statsRow'));
+
+/* ── Marquee: pausar cuando no es visible ── */
+const marqueeObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    e.target.querySelectorAll('.marquee-track').forEach(t => {
+      t.style.animationPlayState = e.isIntersecting ? 'running' : 'paused';
+    });
+  });
+}, { threshold: 0 });
+document.querySelectorAll('.marquee-band').forEach(b => marqueeObs.observe(b));
 
 /* ── Smooth anchor scroll ── */
 document.querySelectorAll('a[href^="#"]').forEach(a => {
