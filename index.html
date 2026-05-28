@@ -726,7 +726,7 @@
 <body>
 
 <!-- ── VIDEO BACKGROUND FIJO ── -->
-<video class="video-bg" muted playsinline autoplay loop preload="none" id="bgVideo">
+<video class="video-bg" muted playsinline autoplay loop preload="metadata" poster="assets/instagram/real_7_497570333_1722576132029960_463.jpg" id="bgVideo">
   <source src="assets/barber-bg.mp4" type="video/mp4">
 </video>
 <div class="video-overlay"></div>
@@ -759,7 +759,6 @@
 
 <!-- ── HERO ── -->
 <section class="hero" id="inicio">
-  <div class="hero-bg"></div>
   <div class="hero-vignette"></div>
 
   <div class="hero-pole">
@@ -1253,67 +1252,21 @@ heroExitTl
 
 /* Nosotros: ig-card aparece (fade in + scale), texto entra desde la derecha */
 gsap.from('.ig-card', {
-  opacity: 0,
-  scale: 0.65,
-  y: 60,
-  ease: 'none',
-  scrollTrigger: {
-    trigger: '.ig-card',
-    start: 'top 92%',
-    end:   'top 62%',
-    scrub: 1.8
-  }
+  opacity: 0, scale: 0.92, y: 40, duration: 0.7, ease: 'power2.out',
+  scrollTrigger: { trigger: '.ig-card', start: 'top 88%', toggleActions: 'play none none none' }
 });
 
 gsap.from('.about-text', {
-  x: 80,
-  opacity: 0,
-  ease: 'none',
-  scrollTrigger: {
-    trigger: '.about-text',
-    start: 'top 92%',
-    end:   'top 62%',
-    scrub: 1.8
-  }
+  x: 50, opacity: 0, duration: 0.7, ease: 'power2.out',
+  scrollTrigger: { trigger: '.about-text', start: 'top 88%', toggleActions: 'play none none none' }
 });
 
-/* Services: cada tarjeta entra desde su posición, scrubbed como el hero */
+/* Services: reveal simple sin scrub */
 gsap.utils.toArray('.svc').forEach((card, i) => {
-  const col  = i % 3;
-  const from = col === 0 ? { x: -160, y: 0 }
-             : col === 2 ? { x:  160, y: 0 }
-             :              { x:    0, y: 130 };
-
   gsap.from(card, {
-    ...from,
-    opacity: 0,
-    ease: 'none',
-    scrollTrigger: {
-      trigger: card,
-      start: 'top 95%',
-      end:   'top 68%',
-      scrub: 1.8
-    }
+    y: 30, opacity: 0, duration: 0.6, delay: (i % 3) * 0.1,
+    scrollTrigger: { trigger: card, start: 'top 90%', toggleActions: 'play none none none' }
   });
-});
-
-/* IG grid mini-parallax (card de about) */
-gsap.utils.toArray('.ig-grid-cell').forEach(cell => {
-  const img = cell.querySelector('img');
-  gsap.fromTo(img,
-    { yPercent: -8, scale: 1.08 },
-    {
-      yPercent: 8,
-      scale: 1.08,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: cell,
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: true
-      }
-    }
-  );
 });
 
 /* ── Burger menu ── */
