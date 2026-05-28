@@ -7,8 +7,7 @@
   <title>Experience Barber Shop · Castellón de la Plana</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=Bebas+Neue&display=swap" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=Bebas+Neue&display=swap"></noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=Bebas+Neue&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -35,7 +34,6 @@
       scroll-behavior: smooth;
       scrollbar-width: thin;
       scrollbar-color: var(--gold) var(--dark);
-      overflow-x: hidden;
     }
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: var(--dark); }
@@ -161,6 +159,7 @@
     .hero-bg {
       position: absolute; inset: -12%;
       background: url('assets/instagram/real_7_497570333_1722576132029960_463.jpg') center/cover no-repeat;
+      will-change: transform;
       filter: grayscale(20%) brightness(0.28);
     }
     .hero-vignette {
@@ -228,9 +227,10 @@
     }
     .hero-title {
       font-family: var(--serif);
-      font-size: clamp(2.8rem, 11vw, 11rem);
-      font-weight: 300; letter-spacing: 0.12em;
-      line-height: 0.95; color: var(--white);
+      font-size: clamp(4.5rem, 13vw, 11rem);
+      font-weight: 300; letter-spacing: 0.18em;
+      line-height: 0.9; color: var(--white);
+      will-change: transform;
     }
     .hero-title-wrap { position: relative; }
     .hero-title-l { clip-path: inset(0 50% 0 0); }
@@ -240,9 +240,10 @@
     }
     .hero-byline {
       font-family: var(--serif);
-      font-size: clamp(0.9rem, 2.4vw, 1.8rem);
+      font-size: clamp(1rem, 2.4vw, 1.8rem);
       font-weight: 300; font-style: italic;
-      letter-spacing: 0.2em; color: var(--gold-lt);
+      letter-spacing: 0.32em; color: var(--gold-lt);
+      will-change: transform;
     }
 
     /* ─── MARQUEE BAND ─────────────────────── */
@@ -353,12 +354,21 @@
     .container { max-width: 1200px; margin: 0 auto; padding: 0 3rem; }
 
     /* ─── ABOUT ─────────────────────────────── */
-    .about-section { background: rgba(7,7,7,0.76); }
     .about-wrap {
       padding: 7rem 3rem;
       max-width: 1200px; margin: 0 auto;
       display: grid; grid-template-columns: 1fr 1fr;
       gap: 5rem; align-items: center;
+      position: relative;
+    }
+    .about-wrap::before {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 50%; transform: translateX(-50%);
+      width: 100vw;
+      background: rgba(7,7,7,0.76);
+      z-index: -1;
     }
 
     /* Instagram card */
@@ -617,12 +627,21 @@
     .stat-l { font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--white-dim); }
 
     /* ─── CONTACT ──────────────────────────── */
-    .contact-section { background: rgba(7,7,7,0.76); }
     .contact-wrap {
       padding: 7rem 3rem;
       max-width: 1200px; margin: 0 auto;
       display: grid; grid-template-columns: 1fr 1fr;
       gap: 6rem; align-items: start;
+      position: relative;
+    }
+    .contact-wrap::before {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 50%; transform: translateX(-50%);
+      width: 100vw;
+      background: rgba(7,7,7,0.76);
+      z-index: -1;
     }
     .contact-info { display: flex; flex-direction: column; gap: 2.2rem; }
     .c-item { display: flex; gap: 1.1rem; align-items: flex-start; }
@@ -683,20 +702,15 @@
     .footer-copy { font-size: 0.67rem; color: rgba(240,237,232,0.28); }
 
     /* ─── REVEAL ───────────────────────────── */
-    .rv, .ig-card, .about-text, .svc {
-      opacity: 0; transform: translateY(24px);
-      transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+    .rv {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.75s var(--ease), transform 0.75s var(--ease);
     }
-    .rv.on, .ig-card.on, .about-text.on, .svc.on { opacity: 1; transform: translateY(0); }
+    .rv.on { opacity: 1; transform: translateY(0); }
     .rv.d1 { transition-delay: 0.1s; }
     .rv.d2 { transition-delay: 0.2s; }
     .rv.d3 { transition-delay: 0.3s; }
     .rv.d4 { transition-delay: 0.4s; }
-    .svc:nth-child(2) { transition-delay: 0.1s; }
-    .svc:nth-child(3) { transition-delay: 0.2s; }
-    .svc:nth-child(4) { transition-delay: 0.05s; }
-    .svc:nth-child(5) { transition-delay: 0.15s; }
-    .svc:nth-child(6) { transition-delay: 0.25s; }
 
     /* ─── RESPONSIVE ───────────────────────── */
     @media (max-width: 1024px) {
@@ -730,7 +744,7 @@
 <body>
 
 <!-- ── VIDEO BACKGROUND FIJO ── -->
-<video class="video-bg" muted playsinline preload="auto" poster="assets/instagram/real_7_497570333_1722576132029960_463.jpg" id="bgVideo">
+<video class="video-bg" muted playsinline preload="auto" id="bgVideo">
   <source src="assets/barber-bg.mp4" type="video/mp4">
 </video>
 <div class="video-overlay"></div>
@@ -817,8 +831,7 @@
 </div>
 
 <!-- ── ABOUT / IG CARD ── -->
-<section class="about-section" id="nosotros">
-<div class="about-wrap">
+<section class="about-wrap" id="nosotros">
 
   <div class="ig-card">
     <div class="ig-header">
@@ -900,7 +913,6 @@
       </div>
     </div>
   </div>
-</div>
 </section>
 
 <!-- ── SERVICES ── -->
@@ -1054,8 +1066,7 @@
 </div>
 
 <!-- ── CONTACT ── -->
-<section class="contact-section" id="contacto">
-<div class="contact-wrap">
+<section class="contact-wrap" id="contacto">
 
   <div class="contact-info rv">
     <span class="lbl">Contacto</span>
@@ -1137,7 +1148,6 @@
       Enviar por WhatsApp →
     </a>
   </div>
-</div>
 </section>
 
 <!-- ── FOOTER ── -->
@@ -1157,45 +1167,81 @@
   </p>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
 /* ── Nav scroll + active links ── */
-const nav   = document.getElementById('mainNav');
+const nav  = document.getElementById('mainNav');
 const links = document.querySelectorAll('.nav-links a');
 
 window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', scrollY > 60);
+
   let active = '';
-  document.querySelectorAll('section[id]').forEach(s => {
+  document.querySelectorAll('section[id], section.hero[id]').forEach(s => {
     if (scrollY >= s.offsetTop - 120) active = s.id;
   });
   links.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + active));
 }, { passive: true });
 
-/* ── Video scrubbing con scroll ── */
+/* ── GSAP + ScrollTrigger ── */
+gsap.registerPlugin(ScrollTrigger);
+
+/* Vídeo scrubbing: frames avanzan con el scroll */
 const bgVideo = document.getElementById('bgVideo');
 bgVideo.pause();
-bgVideo.addEventListener('loadedmetadata', () => {
-  window.addEventListener('scroll', () => {
-    if (bgVideo.readyState < 2 || !bgVideo.duration) return;
-    const progress = scrollY / (document.body.scrollHeight - window.innerHeight);
-    bgVideo.currentTime = bgVideo.duration * Math.min(progress, 1);
-  }, { passive: true });
-}, { once: true });
 
-/* ── Reveal on scroll (IntersectionObserver) ── */
-const revealObs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); revealObs.unobserve(e.target); } });
-}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-document.querySelectorAll('.rv, .ig-card, .about-text, .svc').forEach(el => revealObs.observe(el));
+function initVideoScrub() {
+  ScrollTrigger.create({
+    start: 0,
+    end: 'max',
+    scrub: 0.8,
+    onUpdate: self => {
+      if (bgVideo.readyState > 1) {
+        bgVideo.currentTime = bgVideo.duration * self.progress;
+      }
+    }
+  });
+}
 
-/* ── Carrusel galería ── */
+if (bgVideo.readyState > 0) {
+  initVideoScrub();
+} else {
+  bgVideo.addEventListener('loadedmetadata', initVideoScrub, { once: true });
+}
+
+/* Hero split exit — texto se abre al scrollear */
+const vw = window.innerWidth;
+const heroExitTl = gsap.timeline({
+  scrollTrigger: {
+    trigger: '.hero',
+    start: 'top top',
+    end: '+=240',
+    pin: true,
+    scrub: 1.8,
+    anticipatePin: 1
+  }
+});
+
+heroExitTl
+  // Van a la IZQUIERDA
+  .to(['.hero-eyebrow', '.hero-loc', '.btn-gold', '.hero-byline'],  { x: -vw, opacity: 0 }, 0)
+  .to('.hero-title-l',                              { x: -vw },             0)
+  // Van a la DERECHA
+  .to('.hero-title-r',                              { x:  vw },             0)
+  .to(['.hero-sub', '.btn-ghost', '.hero-pole'],    { x:  vw, opacity: 0 }, 0)
+  // Desvanecen
+  .to(['.hero-rule', '.hero-scroll-indicator'],     { opacity: 0 },         0);
+
+/* Carrusel galería */
 (function () {
-  const track     = document.getElementById('carTrack');
-  const slides    = track.querySelectorAll('.car-slide');
-  const dotsWrap  = document.getElementById('carDots');
-  const currentEl = document.getElementById('carCurrent');
-  const total     = slides.length;
-  let current = 0, autoTimer;
+  const track      = document.getElementById('carTrack');
+  const slides     = track.querySelectorAll('.car-slide');
+  const dotsWrap   = document.getElementById('carDots');
+  const currentEl  = document.getElementById('carCurrent');
+  const total      = slides.length;
+  let current      = 0;
+  let autoTimer;
 
   slides.forEach((_, i) => {
     const d = document.createElement('button');
@@ -1214,6 +1260,7 @@ document.querySelectorAll('.rv, .ig-card, .about-text, .svc').forEach(el => reve
 
   document.getElementById('carPrev').addEventListener('click', () => { goTo(current - 1); resetAuto(); });
   document.getElementById('carNext').addEventListener('click', () => { goTo(current + 1); resetAuto(); });
+
   document.addEventListener('keydown', e => {
     if (e.key === 'ArrowLeft')  { goTo(current - 1); resetAuto(); }
     if (e.key === 'ArrowRight') { goTo(current + 1); resetAuto(); }
@@ -1221,7 +1268,7 @@ document.querySelectorAll('.rv, .ig-card, .about-text, .svc').forEach(el => reve
 
   let startX = 0;
   track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
-  track.addEventListener('touchend', e => {
+  track.addEventListener('touchend',   e => {
     const diff = startX - e.changedTouches[0].clientX;
     if (Math.abs(diff) > 45) { goTo(current + (diff > 0 ? 1 : -1)); resetAuto(); }
   }, { passive: true });
@@ -1233,9 +1280,75 @@ document.querySelectorAll('.rv, .ig-card, .about-text, .svc').forEach(el => reve
   track.closest('.carousel-wrap').addEventListener('mouseleave', startAuto);
 })();
 
+/* Nosotros: ig-card aparece (fade in + scale), texto entra desde la derecha */
+gsap.from('.ig-card', {
+  opacity: 0,
+  scale: 0.65,
+  y: 60,
+  ease: 'none',
+  scrollTrigger: {
+    trigger: '.ig-card',
+    start: 'top 92%',
+    end:   'top 62%',
+    scrub: 1.8
+  }
+});
+
+gsap.from('.about-text', {
+  x: vw,
+  opacity: 0,
+  ease: 'none',
+  scrollTrigger: {
+    trigger: '.about-text',
+    start: 'top 92%',
+    end:   'top 62%',
+    scrub: 1.8
+  }
+});
+
+/* Services: cada tarjeta entra desde su posición, scrubbed como el hero */
+gsap.utils.toArray('.svc').forEach((card, i) => {
+  const col  = i % 3;
+  const from = col === 0 ? { x: -160, y: 0 }
+             : col === 2 ? { x:  160, y: 0 }
+             :              { x:    0, y: 130 };
+
+  gsap.from(card, {
+    ...from,
+    opacity: 0,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: card,
+      start: 'top 95%',
+      end:   'top 68%',
+      scrub: 1.8
+    }
+  });
+});
+
+/* IG grid mini-parallax (card de about) */
+gsap.utils.toArray('.ig-grid-cell').forEach(cell => {
+  const img = cell.querySelector('img');
+  gsap.fromTo(img,
+    { yPercent: -8, scale: 1.08 },
+    {
+      yPercent: 8,
+      scale: 1.08,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: cell,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: true
+      }
+    }
+  );
+});
+
 /* ── Burger menu ── */
 const burgerBtn = document.getElementById('burgerBtn');
 const mobileNav = document.getElementById('mobileNav');
+
 burgerBtn.addEventListener('click', () => {
   const open = mobileNav.classList.toggle('open');
   burgerBtn.classList.toggle('open', open);
@@ -1249,19 +1362,30 @@ mobileNav.querySelectorAll('a').forEach(a => {
   });
 });
 
+/* ── Scroll reveal ── */
+const rvEls = document.querySelectorAll('.rv');
+const rvObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+rvEls.forEach(el => rvObs.observe(el));
+
 /* ── Counter animation ── */
 function runCounter(el, target, ms = 1400) {
   const start = performance.now();
-  const tick = now => {
+  const tick  = now => {
     const p = Math.min((now - start) / ms, 1);
-    el.querySelector('.n').textContent = Math.round((1 - Math.pow(1 - p, 3)) * target);
+    const v = Math.round((1 - Math.pow(1 - p, 3)) * target);
+    el.querySelector('.n').textContent = v;
     if (p < 1) requestAnimationFrame(tick);
   };
   requestAnimationFrame(tick);
 }
+
 const statsObs = new IntersectionObserver(entries => {
   if (entries[0].isIntersecting) {
-    document.querySelectorAll('[data-count]').forEach(el => runCounter(el, +el.dataset.count));
+    document.querySelectorAll('[data-count]').forEach(el => {
+      runCounter(el, +el.dataset.count);
+    });
     statsObs.disconnect();
   }
 }, { threshold: 0.35 });
