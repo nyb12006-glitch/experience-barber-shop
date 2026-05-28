@@ -1210,20 +1210,10 @@ gsap.registerPlugin(ScrollTrigger);
 /* Vídeo scrubbing: frames avanzan con el scroll */
 const bgVideo = document.getElementById('bgVideo');
 
-function initVideoScrub() {
-  if (window.innerWidth <= 768) {
-    /* Móvil: autoplay continuo — sin scrub para que sea fluido y se vea siempre */
-    bgVideo.loop  = true;
-    bgVideo.muted = true;
-    bgVideo.play().catch(() => {});
-    return;
-  }
-
-  /* Desktop: scrub controlado por scroll con rAF throttle para no forzar
-     un decode de frame en cada evento de scroll */
+function startVideoScrub() {
   bgVideo.pause();
-  let rafId     = null;
-  let targetT   = 0;
+  let rafId   = null;
+  let targetT = 0;
 
   ScrollTrigger.create({
     start: 0,
@@ -1239,6 +1229,17 @@ function initVideoScrub() {
       }
     }
   });
+}
+
+function initVideoScrub() {
+  /* En móvil espera a que el buffer esté completo antes de activar el scrub;
+     así el seek de frames no tiene que esperar datos de red y va más fluido */
+  if (window.innerWidth <= 768 && bgVideo.readyState < 4) {
+    bgVideo.addEventListener('canplaythrough', startVideoScrub, { once: true });
+    bgVideo.load();
+  } else {
+    startVideoScrub();
+  }
 }
 
 if (bgVideo.readyState > 0) {
