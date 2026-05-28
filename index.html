@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Experience Barber Shop — Barbería premium en Castellón de la Plana. Corte, Fade, Barba. Reservas: 659 60 24 07">
+  <title>Experience Barber Shop · Castellón de la Plana</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=Bebas+Neue&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --black:      #070707;
+      --dark:       #111111;
+      --card:       #161616;
+      --mid:        #1e1e1e;
+      --gold:       #c9a84c;
+      --gold-lt:    #e8c96a;
+      --gold-dim:   rgba(201,168,76,0.25);
+      --border:     rgba(201,168,76,0.14);
+      --white:      #f0ede8;
+      --white-dim:  rgba(240,237,232,0.55);
+      --white-faint:rgba(240,237,232,0.07);
+      --serif:      'Cormorant Garamond', Georgia, serif;
+      --sans:       'DM Sans', system-ui, sans-serif;
+      --display:    'Bebas Neue', sans-serif;
+      --ease:       cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+
+    html {
+      background: var(--black);
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: var(--gold) var(--dark);
+      overflow-x: hidden;
+    }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--dark); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+    body {
+      background: transparent;
+      color: var(--white);
+      font-family: var(--sans);
+      font-weight: 300;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    /* ─── VIDEO BG ─────────────────────────── */
+    .video-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: -2;
+      pointer-events: none;
+    }
+    .video-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: rgba(7,7,7,0.42);
+      pointer-events: none;
+    }
+
+    img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: var(--sans); cursor: pointer; }
+
+    /* ─── NAV ─────────────────────────────── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      height: 68px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 3.5rem;
+      transition: background 0.5s var(--ease), border-color 0.5s;
+      border-bottom: 1px solid transparent;
+    }
+    .nav.scrolled {
+      background: rgba(7,7,7,0.92);
+      border-bottom-color: var(--border);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+    }
+    .nav-logo {
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      font-weight: 300;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+    }
+    .nav-logo b { color: var(--gold); font-weight: 300; }
+    .nav-links {
+      display: flex; gap: 2.4rem; list-style: none;
+      align-items: center;
+    }
+    .nav-links a {
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--white-dim);
+      transition: color 0.3s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 1px; background: var(--gold);
+      transition: width 0.35s;
+    }
+    .nav-links a:hover, .nav-links a.is-active { color: var(--white); }
+    .nav-links a:hover::after, .nav-links a.is-active::after { width: 100%; }
+    .nav-btn {
+      font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase;
+      padding: 0.55rem 1.5rem;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      background: transparent;
+      transition: all 0.3s;
+    }
+    .nav-btn:hover { background: var(--gold); color: var(--black); }
+
+    .burger {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; padding: 4px; background: none; border: none;
+    }
+    .burger span {
+      display: block; width: 22px; height: 1px;
+      background: var(--white); transition: all 0.35s;
+    }
+    .burger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .burger.open span:nth-child(2) { opacity: 0; }
+    .burger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+    .mobile-nav {
+      display: none; position: fixed;
+      top: 68px; left: 0; right: 0; bottom: 0;
+      background: rgba(7,7,7,0.97);
+      backdrop-filter: blur(24px);
+      z-index: 999;
+      flex-direction: column; align-items: center; justify-content: center;
+      gap: 2.8rem;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      font-family: var(--serif); font-size: 2.8rem; font-weight: 300;
+      letter-spacing: 0.08em; color: var(--white);
+      transition: color 0.3s;
+    }
+    .mobile-nav a:hover, .mobile-nav a.gold { color: var(--gold); }
+
+    /* ─── HERO ─────────────────────────────── */
+    .hero {
+      position: relative; height: 100vh; min-height: 620px;
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hero-bg {
+      position: absolute; inset: -12%;
+      background: url('assets/instagram/real_7_497570333_1722576132029960_463.jpg') center/cover no-repeat;
+      filter: grayscale(20%) brightness(0.28);
+    }
+    .hero-vignette {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(7,7,7,0.25) 0%, rgba(7,7,7,0.1) 35%, rgba(7,7,7,0.6) 75%, rgba(7,7,7,1) 100%),
+        linear-gradient(to right, rgba(7,7,7,0.4) 0%, transparent 40%, transparent 60%, rgba(7,7,7,0.4) 100%);
+    }
+
+    /* Barber pole — right edge decoration */
+    .hero-pole {
+      position: absolute; right: 4rem; top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+    }
+    .pole-cap {
+      width: 14px; height: 6px;
+      background: var(--white);
+      border-radius: 3px 3px 0 0;
+    }
+    .pole-body {
+      width: 10px; height: 110px;
+      border-radius: 2px;
+      overflow: hidden;
+      background: repeating-linear-gradient(
+        180deg,
+        #cc1111 0px, #cc1111 9px,
+        #ffffff 9px, #ffffff 18px,
+        #1144cc 18px, #1144cc 27px,
+        #ffffff 27px, #ffffff 36px
+      );
+      background-size: 100% 36px;
+      animation: poleScroll 1.6s linear infinite;
+    }
+    @keyframes poleScroll {
+      from { background-position: 0 0; }
+      to   { background-position: 0 36px; }
+    }
+    .pole-cap-bot {
+      width: 14px; height: 6px;
+      background: var(--white);
+      border-radius: 0 0 3px 3px;
+    }
+    .pole-label {
+      writing-mode: vertical-rl; text-orientation: mixed;
+      font-size: 0.58rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--white-dim); margin-top: 6px;
+    }
+
+    .hero-content {
+      position: relative; z-index: 1;
+      text-align: center;
+      display: flex; flex-direction: column; align-items: center;
+      gap: 0.9rem;
+    }
+    .hero-eyebrow {
+      display: flex; align-items: center; gap: 1rem;
+      font-size: 0.62rem; letter-spacing: 0.45em;
+      text-transform: uppercase; color: var(--gold);
+    }
+    .hero-eyebrow::before, .hero-eyebrow::after {
+      content: ''; width: 28px; height: 1px;
+      background: var(--gold); opacity: 0.5;
+    }
+    .hero-title {
+      font-family: var(--serif);
+      font-size: clamp(4.5rem, 13vw, 11rem);
+      font-weight: 300; letter-spacing: 0.18em;
+      line-height: 0.9; color: var(--white);
+      will-change: transform;
+    }
+    .hero-title-wrap { position: relative; }
+    .hero-title-l { clip-path: inset(0 50% 0 0); }
+    .hero-title-r {
+      position: absolute; inset: 0;
+      clip-path: inset(0 0 0 50%);
+    }
+    .hero-byline {
+      font-family: var(--serif);
+      font-size: clamp(1rem, 2.4vw, 1.8rem);
+      font-weight: 300; font-style: italic;
+      letter-spacing: 0.32em; color: var(--gold-lt);
+      will-change: transform;
+    }
+
+    /* ─── MARQUEE BAND ─────────────────────── */
+    .marquee-band {
+      overflow: hidden;
+      background: var(--gold);
+      padding: 0.85rem 0;
+      border-top: 1px solid rgba(201,168,76,0.4);
+      border-bottom: 1px solid rgba(201,168,76,0.4);
+    }
+    .marquee-track {
+      display: flex; gap: 0; align-items: center;
+      white-space: nowrap; width: max-content;
+      animation: marqueeScroll 22s linear infinite;
+    }
+    .marquee-track:hover { animation-play-state: paused; }
+    @keyframes marqueeScroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .marquee-item {
+      font-family: var(--display);
+      font-size: 0.8rem; letter-spacing: 0.35em;
+      text-transform: uppercase; color: var(--black);
+      padding: 0 2.2rem;
+    }
+    .marquee-pole {
+      display: inline-block;
+      width: 10px; height: 30px;
+      border-radius: 3px;
+      flex-shrink: 0;
+      align-self: center;
+      margin: 0 1.8rem;
+      background: repeating-linear-gradient(
+        135deg,
+        #cc1111 0px,  #cc1111 5px,
+        #ffffff 5px,  #ffffff 10px,
+        #1144cc 10px, #1144cc 15px,
+        #ffffff 15px, #ffffff 20px
+      );
+      box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    }
+    .hero-sub {
+      font-family: var(--display);
+      font-size: clamp(1rem, 2.8vw, 1.9rem);
+      letter-spacing: 0.55em; color: var(--gold);
+      margin-top: -0.3rem;
+    }
+    .hero-rule {
+      width: 52px; height: 1px;
+      background: var(--gold); opacity: 0.55;
+    }
+    .hero-loc {
+      font-size: 0.72rem; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--white-dim);
+    }
+    .hero-actions {
+      display: flex; gap: 1rem; margin-top: 1.2rem;
+    }
+    .btn-gold {
+      display: inline-block;
+      padding: 0.9rem 2.6rem;
+      background: var(--gold); color: var(--black);
+      font-size: 0.7rem; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      transition: background 0.3s, transform 0.3s;
+    }
+    .btn-gold:hover { background: var(--gold-lt); transform: translateY(-2px); }
+    .btn-ghost {
+      display: inline-block;
+      padding: 0.9rem 2.6rem;
+      border: 1px solid rgba(240,237,232,0.25); color: var(--white-dim);
+      font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
+      transition: all 0.3s;
+    }
+    .btn-ghost:hover { border-color: var(--white); color: var(--white); transform: translateY(-2px); }
+
+    .hero-scroll-indicator {
+      position: absolute; bottom: 2.2rem; left: 50%;
+      transform: translateX(-50%); z-index: 1;
+      display: flex; flex-direction: column; align-items: center; gap: 0.45rem;
+    }
+    .scroll-track {
+      width: 1px; height: 44px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollBlink 2.2s ease-in-out infinite;
+    }
+    @keyframes scrollBlink {
+      0%,100%{ opacity: 0.25; transform: scaleY(0.7); }
+      50%{ opacity: 1; transform: scaleY(1); }
+    }
+    .scroll-txt {
+      font-size: 0.56rem; letter-spacing: 0.32em;
+      text-transform: uppercase; color: var(--white-dim);
+    }
+
+    /* ─── SECTION HELPERS ─────────────────── */
+    .lbl {
+      font-size: 0.63rem; letter-spacing: 0.42em;
+      text-transform: uppercase; color: var(--gold);
+    }
+    .h2 {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 300; line-height: 1.18; color: var(--white);
+    }
+    .h2 em { font-style: italic; color: var(--gold-lt); }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 3rem; }
+
+    /* ─── ABOUT ─────────────────────────────── */
+    .about-section { background: rgba(7,7,7,0.76); }
+    .about-wrap {
+      padding: 7rem 3rem;
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 5rem; align-items: center;
+    }
+
+    /* Instagram card */
+    .ig-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px; overflow: hidden;
+      padding: 1.8rem;
+    }
+    .ig-header {
+      display: flex; align-items: center; gap: 1.1rem;
+      margin-bottom: 1.4rem;
+    }
+    .ig-avatar-wrap {
+      position: relative; width: 64px; height: 64px;
+      flex-shrink: 0;
+    }
+    .ig-avatar-ring {
+      position: absolute; inset: -3px; border-radius: 50%;
+      background: conic-gradient(#f9ce34,#ee2a7b,#6228d7,#ee2a7b,#f9ce34);
+      animation: ringRot 3s linear infinite;
+    }
+    @keyframes ringRot {
+      from{ transform: rotate(0deg); }
+      to{ transform: rotate(360deg); }
+    }
+    .ig-avatar-img {
+      position: absolute; inset: 3px; border-radius: 50%;
+      overflow: hidden; background: #000;
+    }
+    .ig-avatar-img img { object-fit: contain; }
+    .ig-name {
+      font-family: var(--serif); font-size: 0.95rem; font-weight: 400;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .ig-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 15px; height: 15px; border-radius: 50%;
+      background: linear-gradient(135deg, #1877f2, #0a66c2);
+      font-size: 8px; color: white; font-weight: 800; flex-shrink: 0;
+    }
+    .ig-handle-txt { font-size: 0.78rem; color: var(--white-dim); margin-top: 2px; }
+
+    .ig-stats-row {
+      display: flex; justify-content: space-around;
+      padding: 1.1rem 0;
+      border-top: 1px solid var(--white-faint);
+      border-bottom: 1px solid var(--white-faint);
+      margin-bottom: 1.2rem;
+    }
+    .ig-stat { text-align: center; }
+    .ig-stat-n {
+      font-family: var(--display); font-size: 1.5rem;
+      color: var(--white); line-height: 1;
+    }
+    .ig-stat-l {
+      font-size: 0.62rem; color: var(--white-dim);
+      letter-spacing: 0.08em; margin-top: 3px;
+    }
+    .ig-bio-txt {
+      font-size: 0.8rem; color: var(--white-dim); line-height: 1.6;
+      margin-bottom: 1.1rem;
+    }
+    .ig-bio-txt strong { color: var(--white); font-weight: 400; }
+    .ig-grid {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 3px; border-radius: 8px; overflow: hidden;
+      margin-bottom: 1.1rem;
+    }
+    .ig-grid-cell { aspect-ratio: 1; overflow: hidden; }
+    .ig-grid-cell img { transition: transform 0.45s; }
+    .ig-grid-cell:hover img { transform: scale(1.07); }
+    .ig-follow {
+      display: block; width: 100%;
+      padding: 0.65rem; text-align: center;
+      background: #0095f6; color: #fff;
+      border-radius: 8px; font-size: 0.8rem; font-weight: 500;
+      transition: opacity 0.25s;
+    }
+    .ig-follow:hover { opacity: 0.82; }
+
+    /* About text column */
+    .about-text { display: flex; flex-direction: column; gap: 1.5rem; }
+    .about-body {
+      font-size: 0.88rem; color: var(--white-dim); line-height: 1.85;
+    }
+    .about-body strong { color: var(--white); font-weight: 400; }
+    .pills { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+    .pill {
+      font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.32rem 0.85rem;
+      border: 1px solid var(--border); color: var(--gold);
+    }
+    .tel-row {
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .tel-circle {
+      width: 44px; height: 44px; border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold); flex-shrink: 0;
+    }
+    .tel-num {
+      font-family: var(--display); font-size: 1.5rem;
+      letter-spacing: 0.08em; color: var(--white);
+      transition: color 0.3s;
+    }
+    .tel-num:hover { color: var(--gold); }
+    .tel-lbl { font-size: 0.63rem; color: var(--white-dim); letter-spacing: 0.1em; }
+
+    /* ─── SERVICES ─────────────────────────── */
+    .services-section {
+      padding: 7rem 3rem;
+      background: rgba(17,17,17,0.88);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .services-head {
+      max-width: 1200px; margin: 0 auto 4rem;
+      text-align: center;
+      display: flex; flex-direction: column; gap: 0.7rem;
+    }
+    .services-grid {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border);
+    }
+    .svc {
+      background: var(--card); padding: 2.4rem 2rem;
+      display: flex; flex-direction: column; gap: 0.9rem;
+      position: relative; overflow: hidden;
+      transition: background 0.35s;
+    }
+    .svc::after {
+      content: ''; position: absolute;
+      bottom: 0; left: 0; right: 0; height: 2px;
+      background: var(--gold);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.45s var(--ease);
+    }
+    .svc:hover { background: #1a1a1a; }
+    .svc:hover::after { transform: scaleX(1); }
+    .svc-num {
+      position: absolute; top: 1.4rem; right: 1.4rem;
+      font-family: var(--display); font-size: 3.2rem;
+      color: var(--white-faint); line-height: 1;
+    }
+    .svc-icon {
+      width: 34px; height: 34px;
+      color: var(--gold); opacity: 0.85;
+      flex-shrink: 0;
+    }
+    .svc-name {
+      font-family: var(--serif); font-size: 1.3rem;
+      font-weight: 400; color: var(--white);
+    }
+    .svc-desc {
+      font-size: 0.79rem; color: var(--white-dim); line-height: 1.65;
+    }
+
+    /* ─── GALLERY / CARRUSEL ───────────────── */
+    .gallery-section { padding: 7rem 3rem; background: rgba(7,7,7,0.72); }
+    .gallery-head {
+      max-width: 1400px; margin: 0 auto 3.5rem;
+      text-align: center;
+      display: flex; flex-direction: column; gap: 0.7rem;
+    }
+    .carousel-wrap { max-width: 1400px; margin: 0 auto; position: relative; }
+    .carousel-viewport { overflow: hidden; }
+    .carousel-track {
+      display: flex; will-change: transform;
+      transition: transform 0.75s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .car-slide {
+      min-width: 100%; height: 72vh; max-height: 680px;
+      position: relative; overflow: hidden; cursor: pointer;
+      background: #0d0d0d;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .car-slide img { width: 100%; height: 100%; object-fit: contain; transition: transform 0.65s ease; }
+    .car-slide:hover img { transform: scale(1.03); }
+    .g-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(7,7,7,0.82) 0%, transparent 55%);
+      opacity: 0; transition: opacity 0.4s;
+      display: flex; align-items: flex-end; padding: 1rem 1.1rem;
+    }
+    .car-slide:hover .g-overlay { opacity: 1; }
+    .g-handle { font-size: 0.68rem; letter-spacing: 0.1em; color: var(--white-dim); }
+    .g-handle b { color: var(--gold); font-weight: 400; }
+    .car-btn {
+      position: absolute; top: 50%; transform: translateY(-50%); z-index: 10;
+      width: 50px; height: 50px; background: rgba(7,7,7,0.72);
+      border: 1px solid var(--border); color: var(--gold);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.3s; backdrop-filter: blur(8px);
+    }
+    .car-btn:hover { background: rgba(201,168,76,0.18); border-color: var(--gold); }
+    .car-prev { left: 1.2rem; }
+    .car-next { right: 1.2rem; }
+    .car-footer {
+      display: flex; align-items: center; justify-content: center;
+      gap: 2rem; margin-top: 1.6rem;
+    }
+    .car-dots { display: flex; gap: 0.55rem; align-items: center; }
+    .car-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--white-dim); cursor: pointer;
+      transition: all 0.35s; border: none;
+    }
+    .car-dot.active { background: var(--gold); width: 22px; border-radius: 3px; }
+    .car-counter { font-family: var(--display); font-size: 1rem; letter-spacing: 0.22em; color: var(--white-dim); }
+    .car-counter span { color: var(--gold); }
+
+    /* ─── SHINE ────────────────────────────── */
+    .shine-text {
+      background: linear-gradient(90deg, var(--gold) 0%, #fff8c0 38%, var(--gold-lt) 50%, var(--gold) 62%, var(--gold) 100%);
+      background-size: 250% auto;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: textShine 3.5s linear infinite;
+    }
+    @keyframes textShine {
+      from { background-position: 200% center; }
+      to   { background-position: -200% center; }
+    }
+
+    /* ─── STATS ─────────────────────────────── */
+    .stats-band {
+      padding: 5.5rem 3rem;
+      background: rgba(17,17,17,0.85);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      position: relative; overflow: hidden;
+    }
+    .stats-band::before {
+      content: ''; position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(201,168,76,0.045) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .stats-row {
+      max-width: 900px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(4,1fr);
+      gap: 2rem; text-align: center;
+    }
+    .stat-blk { display: flex; flex-direction: column; align-items: center; gap: 0.45rem; }
+    .stat-n {
+      font-family: var(--display); font-size: 3.8rem;
+      color: var(--gold); line-height: 1;
+    }
+    .stat-suf { font-size: 2.2rem; color: var(--gold-lt); }
+    .stat-rule { width: 1px; height: 36px; background: var(--border); }
+    .stat-l { font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--white-dim); }
+
+    /* ─── CONTACT ──────────────────────────── */
+    .contact-section { background: rgba(7,7,7,0.76); }
+    .contact-wrap {
+      padding: 7rem 3rem;
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 6rem; align-items: start;
+    }
+    .contact-info { display: flex; flex-direction: column; gap: 2.2rem; }
+    .c-item { display: flex; gap: 1.1rem; align-items: flex-start; }
+    .c-icon {
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold); flex-shrink: 0; margin-top: 2px;
+      font-size: 0.85rem;
+    }
+    .c-lbl { font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 3px; }
+    .c-val { font-family: var(--serif); font-size: 1.1rem; color: var(--white); transition: color 0.3s; }
+    .c-val:hover { color: var(--gold); }
+    .c-sub { font-size: 0.74rem; color: var(--white-dim); margin-top: 2px; }
+    .socials { display: flex; gap: 0.85rem; margin-top: 0.5rem; }
+    .s-link {
+      width: 42px; height: 42px;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--white-dim); transition: all 0.3s;
+    }
+    .s-link:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-3px); }
+
+    .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+    .fg { display: flex; flex-direction: column; gap: 0.38rem; }
+    .fg label { font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--white-dim); }
+    .fg input, .fg textarea {
+      background: var(--card); border: 1px solid var(--border);
+      color: var(--white); padding: 0.82rem 1rem;
+      font-family: var(--sans); font-size: 0.84rem; font-weight: 300;
+      outline: none; resize: none; transition: border-color 0.3s;
+    }
+    .fg input:focus, .fg textarea:focus { border-color: var(--gold); }
+    .fg input::placeholder, .fg textarea::placeholder { color: rgba(240,237,232,0.2); }
+
+    /* ─── FOOTER ───────────────────────────── */
+    footer {
+      background: rgba(7,7,7,0.92);
+      border-top: 1px solid var(--border);
+      padding: 3.5rem 3rem;
+      display: flex; flex-direction: column; align-items: center;
+      gap: 1.4rem; text-align: center;
+    }
+    .footer-logo {
+      font-family: var(--serif); font-size: 2rem;
+      font-weight: 300; letter-spacing: 0.42em;
+      text-transform: uppercase;
+    }
+    .footer-logo b { color: var(--gold); font-weight: 300; }
+    .footer-rule { width: 36px; height: 1px; background: var(--border); }
+    .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; }
+    .footer-links a {
+      font-size: 0.63rem; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--white-dim);
+      transition: color 0.3s;
+    }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-copy { font-size: 0.67rem; color: rgba(240,237,232,0.28); }
+
+    /* ─── REVEAL ───────────────────────────── */
+    .rv {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.75s var(--ease), transform 0.75s var(--ease);
+    }
+    .rv.on { opacity: 1; transform: translateY(0); }
+    .rv.d1 { transition-delay: 0.1s; }
+    .rv.d2 { transition-delay: 0.2s; }
+    .rv.d3 { transition-delay: 0.3s; }
+    .rv.d4 { transition-delay: 0.4s; }
+
+    /* ─── RESPONSIVE ───────────────────────── */
+    @media (max-width: 1024px) {
+      .about-wrap { grid-template-columns: 1fr; gap: 3.5rem; }
+      .contact-wrap { grid-template-columns: 1fr; gap: 4rem; }
+      .services-grid { grid-template-columns: repeat(2,1fr); }
+      .gallery-grid { grid-template-columns: repeat(3,1fr); }
+      .gallery-grid .g-item:nth-child(4n+1) { grid-row: span 1; }
+      .gallery-grid .g-item:nth-child(3n+1) { grid-row: span 2; }
+      .stats-row { grid-template-columns: repeat(2,1fr); gap: 3rem; }
+      .hero-pole { display: none; }
+    }
+    @media (max-width: 768px) {
+      .nav { padding: 0 1.5rem; }
+      .nav-links, .nav-btn { display: none; }
+      .burger { display: flex; }
+      .about-wrap, .services-section, .gallery-section,
+      .stats-band, .contact-wrap { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .services-grid { grid-template-columns: 1fr; }
+      .gallery-grid { grid-template-columns: repeat(2,1fr); grid-auto-rows: 190px; }
+      .gallery-grid .g-item:nth-child(3n+1) { grid-row: span 1; }
+    }
+    @media (max-width: 480px) {
+      .hero-actions { flex-direction: column; align-items: center; }
+      .stats-row { grid-template-columns: repeat(2,1fr); }
+      .gallery-grid { grid-auto-rows: 150px; }
+      footer { padding: 2.5rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── VIDEO BACKGROUND FIJO ── -->
+<video class="video-bg" muted playsinline autoplay loop preload="none" id="bgVideo">
+  <source src="assets/kling_20260528_作品_The_video__2332_0.mp4" type="video/mp4">
+</video>
+<div class="video-overlay"></div>
+
+<!-- ── NAV ── -->
+<nav class="nav" id="mainNav">
+  <a href="#inicio" class="nav-logo">E<b>x</b>perience</a>
+  <ul class="nav-links">
+    <li><a href="#inicio">Inicio</a></li>
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#galeria">Galería</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+  <a href="tel:659602407" class="nav-btn">Reservar · 659 60 24 07</a>
+  <button class="burger" id="burgerBtn" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ── MOBILE NAV ── -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="#inicio">Inicio</a>
+  <a href="#nosotros">Nosotros</a>
+  <a href="#servicios">Servicios</a>
+  <a href="#galeria">Galería</a>
+  <a href="#contacto">Contacto</a>
+  <a href="tel:659602407" class="gold">659 60 24 07</a>
+</div>
+
+<!-- ── HERO ── -->
+<section class="hero" id="inicio">
+  <div class="hero-bg"></div>
+  <div class="hero-vignette"></div>
+
+  <div class="hero-pole">
+    <div class="pole-cap"></div>
+    <div class="pole-body"></div>
+    <div class="pole-cap-bot"></div>
+    <span class="pole-label">Barbería · Peluquería</span>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">Castellón de la Plana</div>
+    <div class="hero-title-wrap">
+      <h1 class="hero-title hero-title-l">Experience</h1>
+      <h1 class="hero-title hero-title-r" aria-hidden="true">Experience</h1>
+    </div>
+    <p class="hero-byline">by llopis</p>
+    <p class="hero-sub">Barber&nbsp;&nbsp;Shop</p>
+    <div class="hero-rule"></div>
+    <p class="hero-loc">✂&nbsp; Plaza del Real, 19</p>
+    <div class="hero-actions">
+      <a href="tel:659602407" class="btn-gold">Reserva tu cita</a>
+      <a href="#galeria" class="btn-ghost">Ver trabajos</a>
+    </div>
+  </div>
+
+  <div class="hero-scroll-indicator">
+    <div class="scroll-track"></div>
+    <span class="scroll-txt">Scroll</span>
+  </div>
+</section>
+
+<!-- ── MARQUEE BAND ── -->
+<div class="marquee-band">
+  <div class="marquee-track">
+    <span class="marquee-item">✂ Fade</span><span class="marquee-pole"></span>
+    <span class="marquee-item">Corte Clásico</span><span class="marquee-pole"></span>
+    <span class="marquee-item">Barba & Afeitado</span><span class="marquee-pole"></span>
+    <span class="marquee-item">Crop & Textura</span><span class="marquee-pole"></span>
+    <span class="marquee-item">Decoloración</span><span class="marquee-pole"></span>
+    <span class="marquee-item">Degradado</span><span class="marquee-pole"></span>
+    <span class="marquee-item">Experience Barber Shop</span><span class="marquee-pole"></span>
+    <span class="marquee-item">Castellón de la Plana</span><span class="marquee-pole"></span>
+    <span class="marquee-item">✂ Fade</span><span class="marquee-pole"></span>
+    <span class="marquee-item">Corte Clásico</span><span class="marquee-pole"></span>
+    <span class="marquee-item">Barba & Afeitado</span><span class="marquee-pole"></span>
+    <span class="marquee-item">Crop & Textura</span><span class="marquee-pole"></span>
+    <span class="marquee-item">Decoloración</span><span class="marquee-pole"></span>
+    <span class="marquee-item">Degradado</span><span class="marquee-pole"></span>
+    <span class="marquee-item">Experience Barber Shop</span><span class="marquee-pole"></span>
+    <span class="marquee-item">Castellón de la Plana</span><span class="marquee-pole"></span>
+  </div>
+</div>
+
+<!-- ── ABOUT / IG CARD ── -->
+<section class="about-section" id="nosotros">
+<div class="about-wrap">
+
+  <div class="ig-card">
+    <div class="ig-header">
+      <div class="ig-avatar-wrap">
+        <div class="ig-avatar-ring"></div>
+        <div class="ig-avatar-img">
+          <img src="assets/instagram/avatar.jpg" alt="Experience Barber Shop logo">
+        </div>
+      </div>
+      <div>
+        <div class="ig-name">
+          ᴇxᴘᴇʀɪᴇɴᴄᴇ ʙᴀʀʙᴇʀ ꜱʜᴏᴘ
+          <span class="ig-badge">✓</span>
+        </div>
+        <div class="ig-handle-txt">@experiencebyllopis</div>
+      </div>
+    </div>
+
+    <div class="ig-stats-row">
+      <div class="ig-stat">
+        <div class="ig-stat-n">26</div>
+        <div class="ig-stat-l">publicaciones</div>
+      </div>
+      <div class="ig-stat">
+        <div class="ig-stat-n">459</div>
+        <div class="ig-stat-l">seguidores</div>
+      </div>
+      <div class="ig-stat">
+        <div class="ig-stat-n">368</div>
+        <div class="ig-stat-l">seguidos</div>
+      </div>
+    </div>
+
+    <div class="ig-bio-txt">
+      <strong>✂️ @alejandrollopis_</strong><br>
+      ☎️ 659 60 24 07 — Pídeme tu cita
+    </div>
+
+    <div class="ig-grid">
+      <div class="ig-grid-cell"><img src="assets/instagram/real_1_480455333_18485821981049066_92.jpg" alt="Corte 1" loading="lazy"></div>
+      <div class="ig-grid-cell"><img src="assets/instagram/real_2_503780115_1426455648699781_156.jpg" alt="Corte 2" loading="lazy"></div>
+      <div class="ig-grid-cell"><img src="assets/instagram/real_3_572111366_1191332142856695_493.jpg" alt="Corte 3" loading="lazy"></div>
+      <div class="ig-grid-cell"><img src="assets/instagram/real_7_497570333_1722576132029960_463.jpg" alt="Corte 4" loading="lazy"></div>
+      <div class="ig-grid-cell"><img src="assets/instagram/real_9_502492698_1048158246705564_170.jpg" alt="Corte 5" loading="lazy"></div>
+      <div class="ig-grid-cell"><img src="assets/instagram/real_11_503039224_1393526235257775_533.jpg" alt="Corte 6" loading="lazy"></div>
+    </div>
+
+    <a href="https://instagram.com/experiencebyllopis" target="_blank" class="ig-follow">Ver en Instagram</a>
+  </div>
+
+  <div class="about-text">
+    <span class="lbl">Sobre nosotros</span>
+    <h2 class="h2">Donde el estilo<br><em>se convierte en arte</em></h2>
+    <p class="about-body">
+      Experience Barber Shop nace de la pasión de <strong>Alejandro Llopis</strong> por
+      el arte del cabello masculino. Con tan solo 29 años y visión propia, ha creado
+      un espacio donde cada corte es una experiencia única.
+    </p>
+    <p class="about-body">
+      En el corazón de Castellón de la Plana, fusionamos la estética clásica de la
+      barbería tradicional con las tendencias más actuales. Precisión, detalle y
+      personalidad en cada visita.
+    </p>
+    <div class="pills">
+      <span class="pill">Fade</span>
+      <span class="pill">Corte clásico</span>
+      <span class="pill">Barba</span>
+      <span class="pill">Crop</span>
+      <span class="pill">Decoloración</span>
+      <span class="pill">Castellón</span>
+    </div>
+    <div class="tel-row">
+      <div class="tel-circle">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12.1 19.79 19.79 0 0 1 1.61 3.5 2 2 0 0 1 3.59 1.31h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.13 6.13l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.88 16.92z"/></svg>
+      </div>
+      <div>
+        <div class="tel-lbl">Reserva tu cita</div>
+        <a href="tel:659602407" class="tel-num">659 60 24 07</a>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ── SERVICES ── -->
+<section class="services-section" id="servicios">
+  <div class="services-head rv">
+    <span class="lbl">Lo que hacemos</span>
+    <h2 class="h2" style="margin-top:0.5rem">Nuestros Servicios</h2>
+  </div>
+  <div class="services-grid">
+    <div class="svc">
+      <span class="svc-num">01</span>
+      <svg class="svc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+        <circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/>
+        <line x1="20" y1="4" x2="8.12" y2="15.88"/>
+        <line x1="14.47" y1="14.48" x2="20" y2="20"/>
+        <line x1="8.12" y1="8.12" x2="12" y2="12"/>
+      </svg>
+      <div class="svc-name">Corte Clásico</div>
+      <div class="svc-desc">Precisión y estilo en cada corte. Adaptado a tu forma de cara y personalidad, con acabado impecable.</div>
+    </div>
+    <div class="svc">
+      <span class="svc-num">02</span>
+      <svg class="svc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+        <path d="M2 12h20M12 2v20M2 7h5M17 7h5M2 17h5M17 17h5"/>
+      </svg>
+      <div class="svc-name">Fade &amp; Degradado</div>
+      <div class="svc-desc">Transición perfecta de cero a cualquier largo. High, mid y low fade sin líneas visibles.</div>
+    </div>
+    <div class="svc">
+      <span class="svc-num">03</span>
+      <svg class="svc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+        <path d="M3 3l18 18M3 21 12 12l4 4 5-5M5 3h4l2 2-4 4-2-2V3z"/>
+      </svg>
+      <div class="svc-name">Barba &amp; Afeitado</div>
+      <div class="svc-desc">Perfilado, arreglo y afeitado con navaja. La barba perfecta que complementa tu look.</div>
+    </div>
+    <div class="svc">
+      <span class="svc-num">04</span>
+      <svg class="svc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+        <rect x="2" y="7" width="20" height="14" rx="2"/>
+        <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+        <line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/>
+      </svg>
+      <div class="svc-name">Crop &amp; Textura</div>
+      <div class="svc-desc">El corte más popular del momento. Texturizado, flequillo definido y acabado moderno que dura.</div>
+    </div>
+    <div class="svc">
+      <span class="svc-num">05</span>
+      <svg class="svc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+        <path d="M12 22a10 10 0 0 1 0-20"/>
+        <path d="M12 2a10 10 0 0 1 0 20"/>
+        <path d="M2 12h20M12 2c-4 6-4 14 0 20M12 2c4 6 4 14 0 20"/>
+      </svg>
+      <div class="svc-name">Decoloración &amp; Color</div>
+      <div class="svc-desc">Platinos, rubios, mechas y colores especiales. Técnica profesional para resultados que impactan.</div>
+    </div>
+    <div class="svc">
+      <span class="svc-num">06</span>
+      <svg class="svc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+        <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+      </svg>
+      <div class="svc-name">Styling &amp; Asesoramiento</div>
+      <div class="svc-desc">Te ayudamos a encontrar el look que mejor te define. Tu imagen es tu primera impresión.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── GALLERY ── -->
+<section class="gallery-section" id="galeria">
+  <div class="gallery-head rv">
+    <span class="lbl">Portfolio</span>
+    <h2 class="h2" style="margin-top:0.5rem">Nuestro Trabajo</h2>
+  </div>
+  <div class="carousel-wrap">
+    <div class="carousel-viewport">
+      <div class="carousel-track" id="carTrack">
+        <div class="car-slide"><img src="assets/instagram/real_1_480455333_18485821981049066_92.jpg" alt="Corte platino fade" loading="lazy"><div class="g-overlay"><span class="g-handle"><b>@</b>experiencebyllopis</span></div></div>
+        <div class="car-slide"><img src="assets/instagram/real_2_503780115_1426455648699781_156.jpg" alt="Fade clásico" loading="lazy"><div class="g-overlay"><span class="g-handle"><b>@</b>experiencebyllopis</span></div></div>
+        <div class="car-slide"><img src="assets/instagram/real_3_572111366_1191332142856695_493.jpg" alt="Slick back fade" loading="lazy"><div class="g-overlay"><span class="g-handle"><b>@</b>experiencebyllopis</span></div></div>
+        <div class="car-slide"><img src="assets/instagram/real_4_500777579_963987769145370_1234.jpg" alt="Corte juvenil" loading="lazy"><div class="g-overlay"><span class="g-handle"><b>@</b>experiencebyllopis</span></div></div>
+        <div class="car-slide"><img src="assets/instagram/real_5_503025700_1144297200799502_340.jpg" alt="Corte Experience" loading="lazy"><div class="g-overlay"><span class="g-handle"><b>@</b>experiencebyllopis</span></div></div>
+        <div class="car-slide"><img src="assets/instagram/real_6_625820886_18119804605596219_81.jpg" alt="Agenda abierta" loading="lazy"><div class="g-overlay"><span class="g-handle"><b>@</b>experiencebyllopis</span></div></div>
+        <div class="car-slide"><img src="assets/instagram/real_7_497570333_1722576132029960_463.jpg" alt="Fade texturizado" loading="lazy"><div class="g-overlay"><span class="g-handle"><b>@</b>experiencebyllopis</span></div></div>
+        <div class="car-slide"><img src="assets/instagram/real_8_622025247_18089875448094334_52.jpg" alt="Cortes de la semana" loading="lazy"><div class="g-overlay"><span class="g-handle"><b>@</b>experiencebyllopis</span></div></div>
+        <div class="car-slide"><img src="assets/instagram/real_9_502492698_1048158246705564_170.jpg" alt="Fade degradado" loading="lazy"><div class="g-overlay"><span class="g-handle"><b>@</b>experiencebyllopis</span></div></div>
+        <div class="car-slide"><img src="assets/instagram/real_10_523906877_18516082156049066_76.jpg" alt="Corte moderno" loading="lazy"><div class="g-overlay"><span class="g-handle"><b>@</b>experiencebyllopis</span></div></div>
+        <div class="car-slide"><img src="assets/instagram/real_11_503039224_1393526235257775_533.jpg" alt="J Valdin" loading="lazy"><div class="g-overlay"><span class="g-handle"><b>@</b>experiencebyllopis</span></div></div>
+        <div class="car-slide"><img src="assets/instagram/real_12_623509126_2310055426165457_891.jpg" alt="Corte formación" loading="lazy"><div class="g-overlay"><span class="g-handle"><b>@</b>experiencebyllopis</span></div></div>
+      </div>
+    </div>
+    <button class="car-btn car-prev" id="carPrev" aria-label="Anterior">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <button class="car-btn car-next" id="carNext" aria-label="Siguiente">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 6 15 12 9 18"/></svg>
+    </button>
+    <div class="car-footer">
+      <div class="car-dots" id="carDots"></div>
+      <div class="car-counter"><span id="carCurrent">01</span> / 12</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── STATS ── -->
+<section class="stats-band">
+  <div class="stats-row" id="statsRow">
+    <div class="stat-blk rv">
+      <div class="stat-n" data-count="459"><span class="n">0</span><span class="stat-suf">+</span></div>
+      <div class="stat-rule"></div>
+      <div class="stat-l">Seguidores Instagram</div>
+    </div>
+    <div class="stat-blk rv d1">
+      <div class="stat-n" data-count="26"><span class="n">0</span></div>
+      <div class="stat-rule"></div>
+      <div class="stat-l">Publicaciones</div>
+    </div>
+    <div class="stat-blk rv d2">
+      <div class="stat-n" data-count="100"><span class="n">0</span><span class="stat-suf">%</span></div>
+      <div class="stat-rule"></div>
+      <div class="stat-l">Satisfacción</div>
+    </div>
+    <div class="stat-blk rv d3">
+      <div class="stat-n" data-count="5"><span class="n">0</span><span class="stat-suf">+</span></div>
+      <div class="stat-rule"></div>
+      <div class="stat-l">Años de experiencia</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── MARQUEE BAND 2 ── -->
+<div class="marquee-band">
+  <div class="marquee-track" style="animation-direction: reverse;">
+    <span class="marquee-item">✂ Fade</span><span class="marquee-pole"></span>
+    <span class="marquee-item">Corte Clásico</span><span class="marquee-pole"></span>
+    <span class="marquee-item">Barba & Afeitado</span><span class="marquee-pole"></span>
+    <span class="marquee-item">Crop & Textura</span><span class="marquee-pole"></span>
+    <span class="marquee-item">Decoloración</span><span class="marquee-pole"></span>
+    <span class="marquee-item">Degradado</span><span class="marquee-pole"></span>
+    <span class="marquee-item">Experience Barber Shop</span><span class="marquee-pole"></span>
+    <span class="marquee-item">Castellón de la Plana</span><span class="marquee-pole"></span>
+    <span class="marquee-item">✂ Fade</span><span class="marquee-pole"></span>
+    <span class="marquee-item">Corte Clásico</span><span class="marquee-pole"></span>
+    <span class="marquee-item">Barba & Afeitado</span><span class="marquee-pole"></span>
+    <span class="marquee-item">Crop & Textura</span><span class="marquee-pole"></span>
+    <span class="marquee-item">Decoloración</span><span class="marquee-pole"></span>
+    <span class="marquee-item">Degradado</span><span class="marquee-pole"></span>
+    <span class="marquee-item">Experience Barber Shop</span><span class="marquee-pole"></span>
+    <span class="marquee-item">Castellón de la Plana</span><span class="marquee-pole"></span>
+  </div>
+</div>
+
+<!-- ── CONTACT ── -->
+<section class="contact-section" id="contacto">
+<div class="contact-wrap">
+
+  <div class="contact-info rv">
+    <span class="lbl">Contacto</span>
+    <h2 class="h2">Reserva<br><em class="shine-text">tu experiencia</em></h2>
+
+    <div class="c-item">
+      <div class="c-icon">📍</div>
+      <div>
+        <div class="c-lbl">Dirección</div>
+        <a href="https://maps.google.com/?q=Plaza+del+Real+19+Castellon" target="_blank" class="c-val">Plaza del Real, 19</a>
+        <div class="c-sub">Castellón de la Plana</div>
+      </div>
+    </div>
+
+    <div class="c-item">
+      <div class="c-icon">📞</div>
+      <div>
+        <div class="c-lbl">Teléfono · WhatsApp</div>
+        <a href="tel:659602407" class="c-val">659 60 24 07</a>
+        <div class="c-sub">Llámanos o escríbenos para pedir tu cita</div>
+      </div>
+    </div>
+
+    <div class="c-item">
+      <div class="c-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/>
+          <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/>
+        </svg>
+      </div>
+      <div>
+        <div class="c-lbl">Instagram</div>
+        <a href="https://instagram.com/experiencebyllopis" target="_blank" class="c-val">@experiencebyllopis</a>
+        <div class="c-sub">Síguenos para ver nuestros trabajos</div>
+      </div>
+    </div>
+
+    <div class="socials">
+      <a href="https://instagram.com/experiencebyllopis" target="_blank" class="s-link" title="Instagram">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/>
+          <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/>
+        </svg>
+      </a>
+      <a href="https://wa.me/34659602407?text=Hola%2C%20quiero%20reservar%20cita%20en%20Experience%20Barber%20Shop" target="_blank" class="s-link" title="WhatsApp">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+        </svg>
+      </a>
+      <a href="https://instagram.com/alejandrollopis_" target="_blank" class="s-link" title="Barber personal">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <div class="contact-form rv d2">
+    <span class="lbl shine-text" style="margin-bottom:0.8rem;display:block">Escríbenos</span>
+    <div class="fg">
+      <label>Tu nombre</label>
+      <input type="text" placeholder="Nombre y apellido">
+    </div>
+    <div class="fg">
+      <label>Teléfono</label>
+      <input type="tel" placeholder="612 345 678">
+    </div>
+    <div class="fg">
+      <label>Servicio deseado</label>
+      <input type="text" placeholder="Corte, fade, barba...">
+    </div>
+    <div class="fg">
+      <label>Mensaje (opcional)</label>
+      <textarea rows="4" placeholder="Cuéntanos qué tienes en mente..."></textarea>
+    </div>
+    <a href="https://wa.me/34659602407?text=Hola%2C%20quiero%20reservar%20una%20cita%20en%20Experience%20Barber%20Shop"
+       target="_blank" class="btn-gold" style="text-align:center;margin-top:0.4rem;display:block">
+      Enviar por WhatsApp →
+    </a>
+  </div>
+</div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-logo">E<b>x</b>perience</div>
+  <div class="footer-rule"></div>
+  <nav class="footer-links">
+    <a href="#inicio">Inicio</a>
+    <a href="#nosotros">Nosotros</a>
+    <a href="#servicios">Servicios</a>
+    <a href="#galeria">Galería</a>
+    <a href="#contacto">Contacto</a>
+    <a href="https://instagram.com/experiencebyllopis" target="_blank">Instagram</a>
+  </nav>
+  <p class="footer-copy">
+    © 2024 Experience Barber Shop · Plaza del Real, 19 · Castellón de la Plana · ✂ @alejandrollopis_
+  </p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+/* ── Nav scroll + active links ── */
+const nav  = document.getElementById('mainNav');
+const links = document.querySelectorAll('.nav-links a');
+
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', scrollY > 60);
+
+  let active = '';
+  document.querySelectorAll('section[id], section.hero[id]').forEach(s => {
+    if (scrollY >= s.offsetTop - 120) active = s.id;
+  });
+  links.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + active));
+}, { passive: true });
+
+/* ── GSAP + ScrollTrigger ── */
+gsap.registerPlugin(ScrollTrigger);
+
+/* Video de fondo: autoplay normal */
+const bgVideo = document.getElementById('bgVideo');
+bgVideo.play().catch(() => {});
+
+/* Hero split exit — texto se abre al scrollear */
+const vw = window.innerWidth;
+const isMobile = vw < 768;
+const splitDist = isMobile ? vw * 0.55 : vw;
+
+const heroExitTl = gsap.timeline({
+  scrollTrigger: {
+    trigger: '.hero',
+    start: 'top top',
+    end: '+=240',
+    pin: !isMobile,
+    scrub: 1.8,
+    anticipatePin: 1
+  }
+});
+
+heroExitTl
+  // Van a la IZQUIERDA
+  .to(['.hero-eyebrow', '.hero-loc', '.btn-gold', '.hero-byline'],  { x: -splitDist, opacity: 0 }, 0)
+  .to('.hero-title-l',                              { x: -splitDist },             0)
+  // Van a la DERECHA
+  .to('.hero-title-r',                              { x:  splitDist },             0)
+  .to(['.hero-sub', '.btn-ghost', '.hero-pole'],    { x:  splitDist, opacity: 0 }, 0)
+  // Desvanecen
+  .to(['.hero-rule', '.hero-scroll-indicator'],     { opacity: 0 },         0);
+
+/* Carrusel galería */
+(function () {
+  const track      = document.getElementById('carTrack');
+  const slides     = track.querySelectorAll('.car-slide');
+  const dotsWrap   = document.getElementById('carDots');
+  const currentEl  = document.getElementById('carCurrent');
+  const total      = slides.length;
+  let current      = 0;
+  let autoTimer;
+
+  slides.forEach((_, i) => {
+    const d = document.createElement('button');
+    d.className = 'car-dot' + (i === 0 ? ' active' : '');
+    d.setAttribute('aria-label', 'Slide ' + (i + 1));
+    d.addEventListener('click', () => goTo(i));
+    dotsWrap.appendChild(d);
+  });
+
+  function goTo(idx) {
+    current = (idx + total) % total;
+    track.style.transform = 'translateX(-' + current * 100 + '%)';
+    dotsWrap.querySelectorAll('.car-dot').forEach((d, i) => d.classList.toggle('active', i === current));
+    currentEl.textContent = String(current + 1).padStart(2, '0');
+  }
+
+  document.getElementById('carPrev').addEventListener('click', () => { goTo(current - 1); resetAuto(); });
+  document.getElementById('carNext').addEventListener('click', () => { goTo(current + 1); resetAuto(); });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft')  { goTo(current - 1); resetAuto(); }
+    if (e.key === 'ArrowRight') { goTo(current + 1); resetAuto(); }
+  });
+
+  let startX = 0;
+  track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+  track.addEventListener('touchend',   e => {
+    const diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 45) { goTo(current + (diff > 0 ? 1 : -1)); resetAuto(); }
+  }, { passive: true });
+
+  function startAuto() { autoTimer = setInterval(() => goTo(current + 1), 4000); }
+  function resetAuto()  { clearInterval(autoTimer); startAuto(); }
+  startAuto();
+  track.closest('.carousel-wrap').addEventListener('mouseenter', () => clearInterval(autoTimer));
+  track.closest('.carousel-wrap').addEventListener('mouseleave', startAuto);
+})();
+
+/* Nosotros: ig-card aparece (fade in + scale), texto entra desde la derecha */
+gsap.from('.ig-card', {
+  opacity: 0,
+  scale: 0.65,
+  y: 60,
+  ease: 'none',
+  scrollTrigger: {
+    trigger: '.ig-card',
+    start: 'top 92%',
+    end:   'top 62%',
+    scrub: 1.8
+  }
+});
+
+gsap.from('.about-text', {
+  x: 80,
+  opacity: 0,
+  ease: 'none',
+  scrollTrigger: {
+    trigger: '.about-text',
+    start: 'top 92%',
+    end:   'top 62%',
+    scrub: 1.8
+  }
+});
+
+/* Services: cada tarjeta entra desde su posición, scrubbed como el hero */
+gsap.utils.toArray('.svc').forEach((card, i) => {
+  const col  = i % 3;
+  const from = col === 0 ? { x: -160, y: 0 }
+             : col === 2 ? { x:  160, y: 0 }
+             :              { x:    0, y: 130 };
+
+  gsap.from(card, {
+    ...from,
+    opacity: 0,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: card,
+      start: 'top 95%',
+      end:   'top 68%',
+      scrub: 1.8
+    }
+  });
+});
+
+/* IG grid mini-parallax (card de about) */
+gsap.utils.toArray('.ig-grid-cell').forEach(cell => {
+  const img = cell.querySelector('img');
+  gsap.fromTo(img,
+    { yPercent: -8, scale: 1.08 },
+    {
+      yPercent: 8,
+      scale: 1.08,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: cell,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: true
+      }
+    }
+  );
+});
+
+/* ── Burger menu ── */
+const burgerBtn = document.getElementById('burgerBtn');
+const mobileNav = document.getElementById('mobileNav');
+
+burgerBtn.addEventListener('click', () => {
+  const open = mobileNav.classList.toggle('open');
+  burgerBtn.classList.toggle('open', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+});
+mobileNav.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    mobileNav.classList.remove('open');
+    burgerBtn.classList.remove('open');
+    document.body.style.overflow = '';
+  });
+});
+
+/* ── Scroll reveal ── */
+const rvEls = document.querySelectorAll('.rv');
+const rvObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+rvEls.forEach(el => rvObs.observe(el));
+
+/* ── Counter animation ── */
+function runCounter(el, target, ms = 1400) {
+  const start = performance.now();
+  const tick  = now => {
+    const p = Math.min((now - start) / ms, 1);
+    const v = Math.round((1 - Math.pow(1 - p, 3)) * target);
+    el.querySelector('.n').textContent = v;
+    if (p < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+
+const statsObs = new IntersectionObserver(entries => {
+  if (entries[0].isIntersecting) {
+    document.querySelectorAll('[data-count]').forEach(el => {
+      runCounter(el, +el.dataset.count);
+    });
+    statsObs.disconnect();
+  }
+}, { threshold: 0.35 });
+statsObs.observe(document.getElementById('statsRow'));
+
+/* ── Smooth anchor scroll ── */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+</script>
+</body>
+</html>
